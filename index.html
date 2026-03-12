@@ -59,7 +59,7 @@
     }).addTo(map);
 
     Promise.all(
-      walks.map(w => fetch(`${w.slug}.json?v=${Date.now()}`).then(r => r.json()).catch(() => null))
+      walks.map(w => fetch(`data/${w.slug}.json?v=${Date.now()}`).then(r => r.json()).catch(() => null))
     ).then(results => {
       const bounds = L.latLngBounds();
 
@@ -86,7 +86,7 @@
         L.marker(coords[0], {
           icon: L.divIcon({
             className: '',
-            html: `<a class="route-label" href="${walks[i].slug}.html">${walks[i].label}<br><span class="route-distance">${distance}</span></a>`,
+            html: `<a class="route-label" href="walks/${walks[i].slug}.html">${walks[i].label}<br><span class="route-distance">${distance}</span></a>`,
             iconSize: [0, 0]
           })
         }).addTo(map);
