@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lewes Clock Walks</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; }
+
+    header {
+      padding: 24px 32px 16px;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: 16px;
+      color: #222;
+    }
+    #map { flex: 1; }
+    .route-label {
+      display: inline-block;
+      text-decoration: none;
+      padding: 2px 6px;
+      font-size: 13px;
+      font-weight: bold;
+      color: #e63946;
+      white-space: nowrap;
+      transform: translate(-50%, -50%);
+      background: white;
+      border-radius: 4px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    }
+    .route-distance {
+      display: block;
+      font-size: 11px;
+      font-weight: normal;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Lewes Clock Walks</h1>
+  </header>
+  <div id="map"></div>
+
+  <script src="walks.js?v=2"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map');
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19
+    }).addTo(map);
+
+    Promise.all(
+      walks.map(w => fetch(`${w.slug}.json?v=${Date.now()}`).then(r => r.json()).catch(() => null))
+    ).then(results => {
+      const bounds = L.latLngBounds();
+
+      results.forEach((geojson, i) => {
+        if (!geojson) return;
+        const coords = geojson.features
+          .filter(f => f.geometry.type === 'LineString')
+          .flatMap(f => f.geometry.coordinates)
+          .map(([lng, lat]) => L.latLng(lat, lng));
+        if (coords.length === 0) return;
+
+        L.geoJSON(geojson, {
+          style: { color: '#e63946', weight: 4, opacity: 0.85 }
+        }).addTo(map);
+
+        coords.forEach(c => bounds.extend(c));
+
+        let totalMetres = 0;
+        for (let j = 1; j < coords.length; j++) {
+          totalMetres += coords[j - 1].distanceTo(coords[j]);
+        }
+        const distance = `${(totalMetres / 1000).toFixed(1)} km / ${(totalMetres / 1609.344).toFixed(1)} mi`;
+
+        L.marker(coords[0], {
+          icon: L.divIcon({
+            className: '',
+            html: `<a class="route-label" href="${walks[i].slug}.html">${walks[i].label}<br><span class="route-distance">${distance}</span></a>`,
+            iconSize: [0, 0]
+          })
+        }).addTo(map);
+      });
+
+      if (bounds.isValid()) map.fitBounds(bounds, { padding: [40, 40] });
+    });
+  </script>
+</body>
+</html>
