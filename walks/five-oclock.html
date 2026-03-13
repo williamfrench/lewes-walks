@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lewes Clock Walks</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="../walk.css" />
+  <link rel="stylesheet" href="../walk.css?v=2" />
 </head>
 <body>
   <div id="title"></div>
@@ -45,16 +45,13 @@
         for (let i = 1; i < coords.length; i++) {
           totalMetres += coords[i - 1].distanceTo(coords[i]);
         }
-        const label = `${(totalMetres / 1000).toFixed(1)} km / ${(totalMetres / 1609.344).toFixed(1)} mi`;
+        const distance = `${(totalMetres / 1000).toFixed(1)} km / ${(totalMetres / 1609.344).toFixed(1)} mi`;
 
-        const midpoint = coords[Math.floor(coords.length / 2)];
-        L.marker(midpoint, {
-          icon: L.divIcon({
-            className: '',
-            html: `<div class="route-label">${label}</div>`,
-            iconAnchor: [0, 0]
-          })
-        }).addTo(map);
+        const distanceSpan = document.createElement('span');
+        distanceSpan.style.cssText = 'display:block; font-size:0.8rem; font-weight:normal; color:#555;';
+        distanceSpan.textContent = distance;
+        document.getElementById('title').appendChild(distanceSpan);
+
       })
       .catch(err => console.error(`Failed to load ${slug}.json:`, err));
   </script>
