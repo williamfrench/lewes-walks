@@ -10,50 +10,67 @@
 <body>
   <div id="title"></div>
   <div id="map"></div>
-  <script src="../walks.js?v=2"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    const slug = location.pathname.split('/').pop().replace('.html', '');
-    const walk = walks.find(w => w.slug === slug);
-    if (walk) {
-      document.title = walk.label + ' \u2013 Lewes Clock Walks';
-      document.getElementById('title').textContent = walk.label;
-    }
+    const walksScript = document.createElement('script');
+    walksScript.src = `../walks.js?v=${Date.now()}`;
+    walksScript.onload = function() {
+      const slug = location.pathname.split('/').pop().replace('.html', '');
+      const walk = walks.find(w => w.slug === slug);
+      if (walk) {
+        document.title = walk.label + ' \u2013 Lewes Clock Walks';
+        document.getElementById('title').textContent = walk.label;
+      }
 
-    const map = L.map('map').setView([50.8745, -0.0022], 14);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      maxZoom: 19
-    }).addTo(map);
+      const map = L.map('map').setView([50.8745, -0.0022], 14);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19
+      }).addTo(map);
 
-    fetch(`../data/${slug}.json?v=${Date.now()}`)
-      .then(r => r.json())
-      .then(geojson => {
-        const coords = geojson.features
-          .filter(f => f.geometry.type === 'LineString')
-          .flatMap(f => f.geometry.coordinates)
-          .map(([lng, lat]) => L.latLng(lat, lng));
+      fetch(`../data/${slug}.json?v=${Date.now()}`)
+        .then(r => r.json())
+        .then(geojson => {
+          const coords = geojson.features
+            .filter(f => f.geometry.type === 'LineString')
+            .flatMap(f => f.geometry.coordinates)
+            .map(([lng, lat]) => L.latLng(lat, lng));
 
-        if (coords.length === 0) return;
+          if (coords.length === 0) return;
 
-        const layer = L.geoJSON(geojson, {
-          style: { color: '#e63946', weight: 4, opacity: 0.85 }
-        }).addTo(map);
-        map.fitBounds(layer.getBounds(), { padding: [40, 40] });
+          const layer = L.geoJSON(geojson, {
+            style: { color: '#e63946', weight: 4, opacity: 0.85 }
+          }).addTo(map);
+          map.fitBounds(layer.getBounds(), { padding: [40, 40] });
 
-        let totalMetres = 0;
-        for (let i = 1; i < coords.length; i++) {
-          totalMetres += coords[i - 1].distanceTo(coords[i]);
-        }
-        const distance = `${(totalMetres / 1000).toFixed(1)} km / ${(totalMetres / 1609.344).toFixed(1)} mi`;
+          let totalMetres = 0;
+          for (let i = 1; i < coords.length; i++) {
+            totalMetres += coords[i - 1].distanceTo(coords[i]);
+          }
+          const distance = `${(totalMetres / 1000).toFixed(1)} km / ${(totalMetres / 1609.344).toFixed(1)} mi`;
 
-        const distanceSpan = document.createElement('span');
-        distanceSpan.style.cssText = 'display:block; font-size:0.8rem; font-weight:normal; color:#555;';
-        distanceSpan.textContent = distance;
-        document.getElementById('title').appendChild(distanceSpan);
+          const distanceSpan = document.createElement('span');
+          distanceSpan.style.cssText = 'display:block; font-size:0.8rem; font-weight:normal; color:#555;';
+          distanceSpan.textContent = distance;
+          document.getElementById('title').appendChild(distanceSpan);
 
-      })
-      .catch(err => console.error(`Failed to load ${slug}.json:`, err));
+          if (walk && walk.waypoints) {
+            walk.waypoints.forEach(wp => {
+              const icon = L.icon({
+                iconUrl: `../icons/${wp.icon}.svg`,
+                iconSize: [32, 32],
+                iconAnchor: [16, 16],
+                popupAnchor: [0, -16],
+              });
+              L.marker([wp.lat, wp.lng], { icon })
+                .bindPopup(wp.name)
+                .addTo(map);
+            });
+          }
+        })
+        .catch(err => console.error(`Failed to load ${slug}.json:`, err));
+    };
+    document.head.appendChild(walksScript);
   </script>
 </body>
 </html>

@@ -10,9 +10,11 @@
 <body>
   <div id="title"></div>
   <div id="map"></div>
-  <script src="../walks.js?v=3"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
+    const walksScript = document.createElement('script');
+    walksScript.src = `../walks.js?v=${Date.now()}`;
+    walksScript.onload = function() {
     const slug = location.pathname.split('/').pop().replace('.html', '');
     const walk = walks.find(w => w.slug === slug);
     if (walk) {
@@ -52,8 +54,23 @@
         distanceSpan.textContent = distance;
         document.getElementById('title').appendChild(distanceSpan);
 
+        if (walk && walk.waypoints) {
+          walk.waypoints.forEach(wp => {
+            const icon = L.icon({
+              iconUrl: `../icons/${wp.icon}.svg`,
+              iconSize: [32, 32],
+              iconAnchor: [16, 16],
+              popupAnchor: [0, -16],
+            });
+            L.marker([wp.lat, wp.lng], { icon })
+              .bindPopup(wp.name)
+              .addTo(map);
+          });
+        }
       })
       .catch(err => console.error(`Failed to load ${slug}.json:`, err));
+    };
+    document.head.appendChild(walksScript);
   </script>
 </body>
 </html>
