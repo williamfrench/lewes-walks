@@ -1,7 +1,7 @@
 const walksScript = document.createElement('script');
 walksScript.src = `../walks.js?v=${Date.now()}`;
 walksScript.onload = function() {
-  const slug = location.pathname.split('/').pop().replace('.html', '');
+  const slug = new URLSearchParams(location.search).get('slug');
   const walk = walks.find(w => w.slug === slug);
   if (walk) {
     document.title = walk.label + ' \u2013 Lewes Clock Walks';

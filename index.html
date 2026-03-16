@@ -100,7 +100,7 @@
         L.marker(coords[0], {
           icon: L.divIcon({
             className: '',
-            html: `<a class="route-label" href="walks/${walks[i].slug}.html">${walks[i].shortlabel}<br><span class="route-distance">${distance}</span></a>`,
+            html: `<a class="route-label" href="walks/walk.html?slug=${walks[i].slug}">${walks[i].shortlabel}<br><span class="route-distance">${distance}</span></a>`,
             iconSize: [0, 0]
           })
         }).addTo(map);
