@@ -11,11 +11,10 @@ const walks = [
     { lat: 50.896557, lng: -0.164240, name: "The Plough Inn", icon:'pub'},
     { lat: 50.904657, lng: -0.146926, name: "The Coffee Mill", icon: 'cafe'}] },
   { slug: 'ten-oclock',    'shortlabel': '10',                 label: "Ten O'clock",                  waypoints: [] },
-  { slug: 'eleven-oclock', 'shortlabel': '11',                 label: "Eleven O'clock",               waypoints: [] },
+  { slug: 'eleven-oclock', 'shortlabel': '11 - Plumpton',      label: "Eleven O'clock - Plumpton",    waypoints: [
+    { lat: 50.910786, lng: -0.005657, name: "The Rainbow", icon: 'pub'},
+    { lat: 50.892104, lng: -0.010713, name: "The Blacksmith's arms", icon: 'pub'}] },
   { slug: 'twelve-oclock', 'shortlabel': '12 - Newick',        label: "Twelve O'clock - Newick",      waypoints: [
-    { lat: 50.923769, lng: 0.019516, name: "The Royal Oak, Newick", icon: 'pub' }
-
-
-
-  ]},
+    { lat: 50.923769, lng: 0.019516, name: "The Royal Oak, Newick", icon: 'pub' }]
+  },
 ];
