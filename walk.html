@@ -5,15 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lewes Clock Walks</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="../walk.css?v=2" />
+  <link rel="stylesheet" href="walk.css?v=3" />
 </head>
 <body>
+  <a id="back-button" href="index.html">&#8592; Back</a>
   <div id="title"></div>
   <div id="map"></div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     const s = document.createElement('script');
-    s.src = `../walk-page.js?v=${Date.now()}`;
+    s.src = `walk-page.js?v=${Date.now()}`;
     document.head.appendChild(s);
   </script>
 </body>

@@ -1,5 +1,5 @@
 const walksScript = document.createElement('script');
-walksScript.src = `../walks.js?v=${Date.now()}`;
+walksScript.src = `walks.js?v=${Date.now()}`;
 walksScript.onload = function() {
   const slug = new URLSearchParams(location.search).get('slug');
   const walk = walks.find(w => w.slug === slug);
@@ -8,7 +8,8 @@ walksScript.onload = function() {
     document.getElementById('title').textContent = walk.label;
   }
 
-  const map = L.map('map').setView([50.8745, -0.0022], 14);
+  const map = L.map('map', { zoomControl: false }).setView([50.8745, -0.0022], 14);
+  L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
   const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -26,7 +27,7 @@ walksScript.onload = function() {
   osm.addTo(map);
   L.control.layers({ 'Standard': osm, 'Topographic': topo, 'CyclOSM': cyclosm }).addTo(map);
 
-  fetch(`../data/${slug}.json?v=${Date.now()}`)
+  fetch(`data/${slug}.json?v=${Date.now()}`)
     .then(r => r.json())
     .then(geojson => {
       const coords = geojson.features
@@ -55,7 +56,7 @@ walksScript.onload = function() {
       if (walk && walk.waypoints) {
         walk.waypoints.forEach(wp => {
           const icon = L.icon({
-            iconUrl: `../icons/${wp.icon}.svg`,
+            iconUrl: `icons/${wp.icon}.svg`,
             iconSize: [32, 32],
             iconAnchor: [16, 16],
             popupAnchor: [0, -16],
