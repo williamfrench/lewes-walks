@@ -70,7 +70,7 @@
     });
 
     osm.addTo(map);
-    L.control.layers({ 'Standard': osm, 'Topographic': topo, 'CyclOSM': cyclosm }).addTo(map);
+    L.control.layers({ 'Standard': osm, 'Topographic': topo}).addTo(map);
 
     Promise.all(
       walks.map(w => fetch(`data/${w.slug}.json?v=${Date.now()}`).then(r => r.json()).catch(() => null))

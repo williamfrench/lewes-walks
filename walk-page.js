@@ -24,8 +24,8 @@ walksScript.onload = function() {
     maxZoom: 20
   });
 
-  osm.addTo(map);
-  L.control.layers({ 'Standard': osm, 'Topographic': topo, 'CyclOSM': cyclosm }).addTo(map);
+  topo.addTo(map);
+  L.control.layers({ 'Topographic': topo, 'Standard': osm}).addTo(map);
 
   fetch(`data/${slug}.json?v=${Date.now()}`)
     .then(r => r.json())
