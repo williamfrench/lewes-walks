@@ -1,9 +1,12 @@
 const walks = [
   { slug: 'one-oclock',    'shortlabel': '1 - Isfield',        label: "One O'clock - Isfield",        waypoints: [] },
-  { slug: 'two-oclock',    'shortlabel': '2 - Halland',        label: "Two O'clock - Halland",        waypoints: [] },
+  { slug: 'two-oclock',    'shortlabel': '2 - Halland',        label: "Two O'clock - Halland",        waypoints: [
+    { lat: 50.896913, lng: 0.069888, name: "The Green Man", icon: 'pub'}] },
   { slug: 'three-oclock',  'shortlabel': '3 - Berwick',        label: "Three O'clock - Berwick",      waypoints: [
     { lat: 50.842506, lng: 0.115426, name: "Charleston Farm", icon: "cafe"},
-    { lat: 50.847485, lng: 0.085375, name: "The Ram Inn", icon: "pub"} ] },
+    { lat: 50.847485, lng: 0.085375, name: "The Ram Inn", icon: "pub"} ,
+    { lat: 50.858830, lng: 0.070279, name: "The Trevor Arms", icon: "pub"},
+    { lat: 50.859208, lng: 0.070378, name: "Steamworks", icon: 'pub'} ] },
   { slug: 'four-oclock',   'shortlabel': '4 - Alfriston',      label: "Four O'clock - Alfriston",     waypoints: [
     { lat: 50.858830, lng: 0.070279, name: "The Trevor Arms", icon: "pub"},
     { lat: 50.859208, lng: 0.070378, name: "Steamworks", icon: 'pub'} ] },
