@@ -1,9 +1,13 @@
 const walks = [
   { slug: 'one-oclock',    'shortlabel': '1 - Isfield',        label: "One O'clock - Isfield",        waypoints: [] },
   { slug: 'two-oclock',    'shortlabel': '2 - Halland',        label: "Two O'clock - Halland",        waypoints: [] },
-  { slug: 'three-oclock',  'shortlabel': '3',                  label: "Three O'clock",                waypoints: [] },
-  { slug: 'four-oclock',   'shortlabel': '4',                  label: "Four O'clock",                 waypoints: [] },
-  { slug: 'five-oclock',  'shortlabel': '5 - Bishopstone',    label: "Five O'clock - Bishopstone",  waypoints: [
+  { slug: 'three-oclock',  'shortlabel': '3 - Berwick',        label: "Three O'clock - Berwick",      waypoints: [
+    { lat: 50.842506, lng: 0.115426, name: "Charleston Farm", icon: "cafe"},
+    { lat: 50.847485, lng: 0.085375, name: "The Ram Inn", icon: "pub"} ] },
+  { slug: 'four-oclock',   'shortlabel': '4 - Alfriston',      label: "Four O'clock - Alfriston",     waypoints: [
+    { lat: 50.858830, lng: 0.070279, name: "The Trevor Arms", icon: "pub"},
+    { lat: 50.859208, lng: 0.070378, name: "Steamworks", icon: 'pub'} ] },
+  { slug: 'five-oclock',   'shortlabel': '5 - Bishopstone',    label: "Five O'clock - Bishopstone",  waypoints: [
     { lat: 50.831916, lng: 0.034153, name: "YHA South Downs", icon: 'cafe'}]},
   { slug: 'six-oclock',    'shortlabel': '6 - Newhaven',       label: "Six O'clock - Newhaven",       waypoints:[
     { lat: 50.835848, lng: 0.012611, name: 'The Abergavenny Arms', icon: 'pub' }]},
