@@ -27,6 +27,59 @@ walksScript.onload = function() {
   topo.addTo(map);
   L.control.layers({ 'Topographic': topo, 'Standard': osm}).addTo(map);
 
+  const locateBtn = document.getElementById('locate-btn');
+  let locationMarker = null;
+  let locationAccuracyCircle = null;
+  let watchId = null;
+
+  locateBtn.addEventListener('click', () => {
+    if (watchId !== null) {
+      navigator.geolocation.clearWatch(watchId);
+      watchId = null;
+      if (locationMarker) { map.removeLayer(locationMarker); locationMarker = null; }
+      if (locationAccuracyCircle) { map.removeLayer(locationAccuracyCircle); locationAccuracyCircle = null; }
+      locateBtn.classList.remove('active');
+      locateBtn.textContent = '◎ Locate me';
+      return;
+    }
+
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser.');
+      return;
+    }
+
+    locateBtn.textContent = '◎ Locating…';
+    watchId = navigator.geolocation.watchPosition(
+      pos => {
+        const { latitude, longitude, accuracy } = pos.coords;
+        const latlng = L.latLng(latitude, longitude);
+
+        if (!locationMarker) {
+          locationMarker = L.circleMarker(latlng, {
+            radius: 8, color: '#1a73e8', fillColor: '#1a73e8',
+            fillOpacity: 0.9, weight: 2
+          }).addTo(map);
+          locationAccuracyCircle = L.circle(latlng, { radius: accuracy,
+            color: '#1a73e8', fillColor: '#1a73e8', fillOpacity: 0.1, weight: 1
+          }).addTo(map);
+        } else {
+          locationMarker.setLatLng(latlng);
+          locationAccuracyCircle.setLatLng(latlng).setRadius(accuracy);
+        }
+
+        locateBtn.classList.add('active');
+        locateBtn.textContent = '◎ Locating…';
+        locateBtn.textContent = '◎ Located';
+      },
+      err => {
+        watchId = null;
+        locateBtn.textContent = '◎ Locate me';
+        alert('Could not get your location: ' + err.message);
+      },
+      { enableHighAccuracy: true }
+    );
+  });
+
   fetch(`data/${slug}.json?v=${Date.now()}`)
     .then(r => r.json())
     .then(geojson => {
